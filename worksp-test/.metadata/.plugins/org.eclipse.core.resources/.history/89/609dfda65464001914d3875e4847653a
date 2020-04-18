@@ -1,0 +1,226 @@
+package edu.om.exams.unlam_exam;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
+
+public class Graph {
+
+	static class Node implements Comparable<Node>{
+		public Integer first;
+		public Integer second;
+		public Integer cost;
+		
+		Node(Integer first, Integer second){
+			this.first = first;
+			this.second = second;
+		}
+		
+		Node(Integer first, Integer second, Integer cost){
+			this.first = first;
+			this.second = second;
+			this.cost = cost;
+		}
+
+		@Override
+		public int compareTo(Node node) {
+			return this.cost - node.cost;
+		}
+	}
+	//dont funk
+    // Function returns the minimum number of swaps 
+    // required to sort the array 
+    public static int minimumSwaps(int[] array){ 
+
+  
+        // Create two arrays and use as pairs where first 
+        // array is element and second array 
+        // is position of first element 
+        List <Node> arrpos = new ArrayList <Node> (); 
+		for (int i = 0; i < array.length; i++) 
+             arrpos.add(new Node(array[i], i)); 
+  
+        // Sort the array by array element values to 
+        // get right position of every element as the 
+        // elements of second array. 
+        arrpos.sort(new Comparator<Node>() 
+        { 
+            @Override
+            public int compare(Node o1, 
+                               Node o2) 
+            { 
+                if (o1.first > o2.first) 
+                    return -1; 
+  
+                // We can change this to make it then look at the 
+                // words alphabetical order 
+                else if (o1.first.equals(o2.first)) 
+                    return 0; 
+  
+                else
+                    return 1; 
+            } 
+        }); 
+  
+        // To keep track of visited elements. Initialize 
+        // all elements as not visited or false. 
+        Boolean[] visited = new Boolean[array.length]; 
+        Arrays.fill(visited, false); 
+  
+        // Initialize result 
+        int minimumSwaps = 0; 
+  
+        // Traverse array elements 
+        for (int i = 0; i < array.length; i++){ 
+            // already swapped and corrected or 
+            // already present at correct pos 
+            if (visited[i] || arrpos.get(i).second == i) 
+                continue; 
+  
+            // find out the number of  node in 
+            // this cycle and add in minimumSwaps 
+            int cycleSize = 0; 
+            int j = i; 
+            while (!visited[j]){ 
+                visited[j] = true; 
+  
+                // move to next node 
+                j = arrpos.get(j).second; 
+                cycleSize++; 
+            } 
+  
+            // Update answer by adding current cycle. 
+            if(cycleSize > 0){ 
+                minimumSwaps += (cycleSize - 1); 
+            } 
+        } 
+  
+        // Return result 
+        return minimumSwaps; 
+    }
+    
+	public static int minimumSwapsSimple(int[] array) {
+		int swap = 0;
+		boolean visited[]=new boolean[array.length];
+
+		for(int i=0;i<array.length;i++){
+			int j=i, sizeCycle=0;
+
+			while(!visited[j]){
+				visited[j]=true;
+				j=array[j]-1;
+				sizeCycle++;
+			}
+			
+			System.out.println(sizeCycle);
+			if(sizeCycle!=0)
+				swap+=sizeCycle-1;
+		}
+		
+		return swap;
+	}
+	
+	public static Map<String, Integer[][]> applyfloydWarshall(Integer[][] weights) {
+		Integer[][] distances = weights.clone();
+ 
+//        Initialize matrix of paths
+		Integer[][] paths = new Integer[weights.length][weights.length];
+        for(int i= 0; i<weights.length; i++) {
+        	for(int j=0; j<weights.length;j++) {
+        		paths[j][i] = 0;
+        		if(i!=j) {
+        			paths[j][i] = i+1;
+        		}
+        	}
+        }
+ 
+        for (int k = 0; k < weights.length; k++)
+            for (int i = 0; i < weights.length; i++)
+                for (int j = 0; j < weights.length; j++) {
+                	if(distances[i][k] == null || distances[k][j] == null) {
+                		continue;
+                	}
+                	if (distances[i][j] == null || 
+                			(distances[i][k] + distances[k][j] < distances[i][j])) {
+                        distances[i][j] = distances[i][k] + distances[k][j];
+                        paths[i][j] = paths[i][k];
+                    }
+                }
+                    
+ 
+        Map<String, Integer[][]> result = new HashMap<>();
+        result.put("distances", distances);
+        result.put("paths", paths);
+        
+        return result;
+    }
+	
+	public static Integer[] applyDikjstran(final Integer originIndexNode, Integer[][] graph) {
+		Set<Node>[] arrayPaths = new HashSet[graph.length];
+		for(int i=0; i< graph.length; i++) {
+			Set<Node> row = new HashSet<>();
+			arrayPaths[i] = row;
+			for(int j=0; j< graph.length; j++) {
+				if(graph[i][j] !=null && graph[i][j]!=0) {
+					row.add(new Node(i, j, graph[i][j]));
+				}
+			}
+		}
+			
+		
+		boolean [] visted = new boolean [graph.length];
+		Integer [] costs = new Integer [graph.length];
+		Arrays.fill(costs, 9999);
+		
+		PriorityQueue<Node> labels = new PriorityQueue<>();
+
+		
+		costs[originIndexNode] = 0;
+		labels.add(new Node(originIndexNode, originIndexNode,0));
+		while(!labels.isEmpty()) {
+			int actualIndexNode = labels.poll().second;
+			
+			if(!visted[actualIndexNode]) {
+				visted[actualIndexNode] = true;
+					
+					for (Node actualNode : arrayPaths[actualIndexNode]) {
+						int nextNode = actualNode.second;
+						int costToNext = actualNode.cost;
+					
+					if(costs[actualIndexNode] + costToNext < costs[nextNode]) {
+						costs[nextNode] = costs[actualIndexNode] + costToNext;
+						labels.add(new Node(actualIndexNode, nextNode, costs[nextNode]));
+					}
+				}
+			}
+		}
+		
+		return costs;
+	}
+
+
+	
+	public static void main(String[] args) {
+		String all = "pato pato pato pato";
+		int amount = 0;
+		int index = all.indexOf("pato");
+				while (index!=-1) {
+					amount ++;
+					all = all.substring(index, all.length());
+
+					
+				}
+
+				System.out.println(amount);
+	}
+}

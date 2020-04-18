@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;MainTest.java&apos; to &apos;unlam-exam/src/main/java/edu.om.exams.unlam_exam&apos;&#x0D;&#x0A;- Original project: &apos;dexam-test&apos;&#x0D;&#x0A;- Destination element: &apos;unlam-exam/src/main/java/edu.om.exams.unlam_exam&apos;&#x0D;&#x0A;- Original element: &apos;MainTest.java&apos;" description="Copy compilation unit" destination="=unlam-exam/src\/main\/java&lt;edu.om.exams.unlam_exam" element1="/src&lt;{MainTest.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1555687709154" units="1" version="1.0"/>
+</session>

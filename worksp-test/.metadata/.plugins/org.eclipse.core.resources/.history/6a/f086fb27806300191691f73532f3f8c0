@@ -1,0 +1,25 @@
+package edu.om.exams.unlam_exam;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class GraphTest {
+
+	@Test
+	public void testMinimumSwaps() {
+		int[] array = {9, 5, 4, 3, 2};
+		int minimum = Graph.minimumSwaps(array);
+		System.out.println(minimum);
+	}
+
+	@Test
+	public void testMinimumSwapsSimple() {
+//		int[] array =  {3,1,2,4};
+		int[] array = {1, 5, 4, 3, 2};
+		int minimum = Graph.minimumSwapsSimple(array);
+		System.out.println(minimum);
+	}
+	
+
+}
